@@ -338,6 +338,37 @@ dev.off()
 
 
 ##### Reproduce Figure B.1 -----
-
-
-## git commit -S -m "Add code for theory plots (Figs 1-3, A.1-3, B.1)"
+## For Figure B.1, we simulate data from 500 respondents to 10 4-option items
+set.seed(42)                            ## For reproducibility
+sim_data <- ggum_simulation(500, 10, 4) ## From the bggum package
+## Extract item parameters for convenience
+alpha <- sim_data$alpha
+delta <- sim_data$delta
+tau <- sim_data$tau
+## Now we'll plot profile likelihoods for some bimodal theta parameters
+pdf("plots/figB1.pdf", height = 4, width = 12)
+## Set layout and plotting parameters
+layout(matrix(1:2, nrow = 1))
+opar <- par(mar = c(3, 2, 1, 1) + 0.1)
+theta_range <- seq(-3.5, 3.5, 0.01)
+for ( i in c(241, 445) ) {
+    ## Calculate the profile likelihood
+    responses <- sim_data$response_matrix[i, ]
+    likelihood <- exp(sapply(theta_range, function(th) {
+        sum(log(ggumProbability(responses, th, alpha, delta, tau)))
+    }))
+    ## Plot profile likelihood
+    plot(
+        x = theta_range, y = likelihood, type = "l",
+        main = "", xlab = "", ylab = "",
+        xaxt = "n", yaxt = "n"
+    )
+    ## Add indicator of true value
+    abline(v = sim_data$theta[i], lty = 2, col = "#808080")
+    ## Add and label axes
+    axis(1, at = -3:3, tick = FALSE, line = -0.75)
+    mtext(side = 1, line = 1.50, text = expression("Ideology (" * theta * ")"))
+    mtext(side = 2, line = 0.25, text = expression(L(X[i])))
+}
+par(opar)
+dev.off()
