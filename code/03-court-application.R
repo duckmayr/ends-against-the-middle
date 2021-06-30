@@ -205,7 +205,7 @@ saveRDS(fold_estimates, file = "output/fold_estimates.rds")
 # and clean up
 stopCluster(cl)
 
-##### Cross validation #####,
+##### Reproduce Table H1 -----
 # This is the response probability function assumed for M-Q
 mq_prob <- function(vote, alpha, beta, theta) {
     # MCMCpack documentation puts it like
@@ -293,88 +293,174 @@ model_comparisons <- data.frame(model = c("GGUM", "MQ", "Naive"),
                                 auc = c(ggum_auc, mq_auc, NA))
 saveRDS(model_comparisons, file = "output/10fold-model_comparisons.rds")
 
-##### In-sample Model Comparisons #####
-full_estimates <- readRDS("output/full_estimates.rds")
-thetas <- full_estimates$ggum_estimates$theta
-alphas <- full_estimates$ggum_estimates$alpha
-deltas <- full_estimates$ggum_estimates$delta
-taus <- full_estimates$ggum_estimates$tau
-mq_estimates <- full_estimates$mq_estimates
-cjr_estimates <- full_estimates$cjr_estimates
-ggum_probs <- ggumProbability(response_matrix, thetas, alphas, deltas, taus)
-mq_probs <- matrix(NA_real_, nrow = n, ncol = m)
-cjr_probs <- matrix(NA_real_, nrow = n, ncol = m)
+
+##### Reproduce Figure 7 -----
+## Pull out estimates for convenience
+theta <- full_estimates$ggum_estimates$theta
+alpha <- full_estimates$ggum_estimates$alpha
+delta <- full_estimates$ggum_estimates$delta
+tau   <- full_estimates$ggum_estimates$tau
+## Make a function to get the response probabilities for the Martin-Quinn model
 mq_prob <- function(vote, alpha, beta, theta) {
     return(pnorm(alpha - beta*theta, lower.tail = !vote))
 }
-for ( i in 1:n ) {
-    for ( j in 1:m ) {
-        justice <- justices[i]
-        tt <- paste0(".t", time_map[j])
-        id <- paste0(".", colnames(response_matrix)[j])
-        theta <- mq_estimates[paste0("theta.", justice, tt)]
-        alpha <- mq_estimates[paste0("alpha", id)]
-        beta <- mq_estimates[paste0("beta", id)]
-        mq_probs[i, j] <- mq_prob(response_matrix[i, j], alpha, beta, theta)
-        theta <- cjr_estimates[paste0("theta.", justice)]
-        alpha <- cjr_estimates[paste0("alpha", id)]
-        beta <- cjr_estimates[paste0("beta", id)]
-        cjr_probs[i, j] <- mq_prob(response_matrix[i, j], alpha, beta, theta)
-    }
+## Set the theta range to use for the Martin-Quinn models
+th_range <- seq(-3, 3, 0.01)
+## Set palette
+pal   <- c("#808080", "black")
+## Store justices' initials to identify their position on the plots
+j_id  <- c("JR", "AS", "AK", "CT", "RG", "SB", "SA", "SS", "EK")
+
+## Plot GGUM IRF for Wynne
+tiff(
+    filename = "plots/fig7a.tif",
+    width = 6, height = 4, units = "in",
+    res = 1000, compression = "lzw"
+)
+opar <- par(mar = c(3, 3, 1, 1) + 0.1)
+item <- 166
+custom_irf(
+    alpha[item], delta[item], tau[[item]], from = -2.25, to = 2.25,
+    option_names = c("Dissent", "Majority"), line_types = 2:1, color = TRUE,
+    color_palette = pal, main_title = "", x_axis_at = -2:2, lwd = 2
+)
+resps <- response_matrix[ , item]
+probs <- ggumProbability(resps, theta, alpha[item], delta[item], tau[[item]])
+points(theta, probs, pch = 19, col = pal[resps + 1], cex = 1.5)
+#            JG     AS    AM     CT     RG     SB     SA     SS     EK
+xadj <- c(-0.08, -0.08, 0.08,  0.08,  0.08, -0.08,  0.00, -0.20, -0.08)
+yadj <- c(-0.08,  0.08, 0.08, -0.08,  0.08,  0.08, -0.08,  0.00, -0.08)
+text(theta + xadj, probs + yadj, labels = j_id, col = pal[resps + 1])
+par(opar)
+dev.off()
+
+## Plot M-Q IRF for Wynne
+tiff(
+    filename = "plots/fig7b.tif",
+    width = 6, height = 4, units = "in",
+    res = 1000, compression = "lzw"
+)
+opar <- par(mar = c(3, 3, 1, 1) + 0.1)
+item <- 166
+mq_estimates <- full_estimates$mq_estimates
+theta <- mq_estimates[grepl(paste0("t", time_map[item]), names(mq_estimates))]
+alpha <- mq_estimates[paste("alpha", ids[item], sep = ".")]
+beta  <- mq_estimates[paste("beta", ids[item], sep = ".")]
+resps <- response_matrix[ , item]
+probs <- sapply(1:9, function(i) mq_prob(resps[i], alpha, beta, theta[i]))
+ones  <- mq_prob(1, alpha, beta, th_range)
+zeros <- mq_prob(0, alpha, beta, th_range)
+plot(
+    x = th_range, y = zeros,
+    type = "l", lty = 2, col = pal[1], lwd = 2,
+    ylim = c(0, 1.01), xaxt = "n", yaxt = "n",
+    main = "", xlab = "", ylab = ""
+)
+axis(
+    side = 2,
+    at = c(0, 0.25, 0.5, 0.75, 1),
+    labels = c("0", "0.25", "0.5", "0.75", "1"),
+    tick = FALSE, line = -0.75
+)
+title(ylab = expression(P[ij](k)), line = 1.5)
+axis(1, at = -3:3, tick = FALSE, line = -0.75)
+mtext(expression("Ideology (" * theta * ")"), side = 1, line = 1.5)
+lines(th_range, ones, col = pal[2], lwd = 2)
+points(theta, probs, pch = 19, col = pal[resps+1], cex = 1.5)
+#            JG     AS    AM     CT     RG     SB     SA     SS     EK
+xadj <- c(-0.00, -0.00, 0.00,  0.00,  0.00, -0.00,  0.00, -0.00, -0.00)
+yadj <- c( 0.08, -0.08, 0.08, -0.08, -0.08,  0.08,  0.08,  0.08, -0.08)
+text(theta + xadj, probs + yadj, labels = j_id, col = pal[resps+1])
+par(xpd = TRUE)
+legend(
+    "topleft", inset = c(0, -0.1), legend = c("Dissent", "Majority"),
+    lty = 2:1, horiz = TRUE, col = pal, bty = "n", lwd = 2
+)
+par(opar)
+dev.off()
+
+
+##### Reproduce Figure 8 -----
+## Pull out estimates for convenience
+theta <- full_estimates$ggum_estimates$theta
+alpha <- full_estimates$ggum_estimates$alpha
+delta <- full_estimates$ggum_estimates$delta
+tau   <- full_estimates$ggum_estimates$tau
+## Make a function to get the response probabilities for the Martin-Quinn model
+mq_prob <- function(vote, alpha, beta, theta) {
+    return(pnorm(alpha - beta*theta, lower.tail = !vote))
 }
-ggum_pred_prob <- ifelse(response_matrix == 1, ggum_probs, 1 - ggum_probs)
-mq_pred_prob <- ifelse(response_matrix == 1, mq_probs, 1 - mq_probs)
-cjr_pred_prob <- ifelse(response_matrix == 1, cjr_probs, 1 - cjr_probs)
-ggum_pred <- ifelse(ggum_pred_prob > 0.5, 1, 0)
-mq_pred <- ifelse(mq_pred_prob > 0.5, 1, 0)
-cjr_pred <- ifelse(cjr_pred_prob > 0.5, 1, 0)
-actual <- c(response_matrix)
-naive_pred <- naive_pred_prob <- pmax(actual, 1)
-cat("GGUM confusion matrix:\n")
-caret::confusionMatrix(factor(c(ggum_pred)), factor(actual))
-cat("MQ confusion matrix:\n")
-caret::confusionMatrix(factor(c(mq_pred)), factor(actual))
-cat("CJR confusion matrix:\n")
-caret::confusionMatrix(factor(c(cjr_pred)), factor(actual))
-# Get proportion correctly classified
-ggum_correct <- mean(ggum_pred == response_matrix, na.rm = TRUE)
-mq_correct <- mean(mq_pred == response_matrix, na.rm = TRUE)
-cjr_correct <- mean(cjr_pred == response_matrix, na.rm = TRUE)
-naive_correct <- mean(naive_pred == response_matrix, na.rm = TRUE)
-# Brier
-ggum_brier <- mean((ggum_pred_prob - response_matrix)^2, na.rm = TRUE)
-mq_brier <- mean((mq_pred_prob - response_matrix)^2, na.rm = TRUE)
-cjr_brier <- mean((mq_pred_prob - response_matrix)^2, na.rm = TRUE)
-# APRE
-minority_votes <- apply(response_matrix, 2, function(x) sum(!x, na.rm = TRUE))
-ggum_errors <- sapply(1:m, function(j) {
-    sum(ggum_pred[ , j] != response_matrix[ , j], na.rm = TRUE)
-})
-mq_errors <- sapply(1:m, function(j) {
-    sum(mq_pred[ , j] != response_matrix[ , j], na.rm = TRUE)
-})
-cjr_errors <- sapply(1:m, function(j) {
-    sum(cjr_pred[ , j] != response_matrix[ , j], na.rm = TRUE)
-})
-ggum_apre <- sum(minority_votes - ggum_errors) / sum(minority_votes)
-mq_apre <- sum(minority_votes - mq_errors) / sum(minority_votes)
-cjr_apre <- sum(minority_votes - cjr_errors) / sum(minority_votes)
-# AUC
-ggum_auc <- auc(roc(actual, c(ggum_pred)))
-mq_auc <- auc(roc(actual, c(mq_pred)))
-cjr_auc <- auc(roc(actual, c(cjr_pred)))
-# Estimate precision
-ggum_sd <- mean(full_estimates$ggum_posterior_sds)
-mq_sd <- mean(full_estimates$mq_posterior_sds)
-cjr_sd <- mean(full_estimates$cjr_posterior_sds)
-# Collect the comparisons and save them
-model_comparisons <- data.frame(model = c("GGUM", "MQ", "CJR", "Naive"),
-                                proportion_correct = c(ggum_correct,
-                                                       mq_correct,
-                                                       cjr_correct,
-                                                       naive_correct),
-                                mean_theta_sd = c(ggum_sd, mq_sd, cjr_sd, NA),
-                                apre = c(ggum_apre, mq_apre, cjr_apre, NA),
-                                auc = c(ggum_auc, mq_auc, cjr_auc, NA),
-                                brier = c(ggum_brier, mq_brier, cjr_brier, NA))
-saveRDS(model_comparisons, file = "data/court/in-sample-model_comparisons.rds")
+## Set the theta range to use for the Martin-Quinn models
+th_range <- seq(-3, 3, 0.01)
+## Set palette
+pal   <- c("#808080", "black")
+## Store justices' initials to identify their position on the plots
+j_id  <- c("JR", "AS", "AK", "CT", "RG", "SB", "SA", "SS", "EK")
+
+## Plot GGUM IRF for Arizona
+tiff(
+    filename = "plots/fig8a.tif",
+    width = 6, height = 4, units = "in",
+    res = 1000, compression = "lzw"
+)
+opar <- par(mar = c(3, 3, 1, 1) + 0.1)
+item <- 83
+custom_irf(
+    alpha[item], delta[item], tau[[item]], from = -2.25, to = 2.25,
+    option_names = c("Dissent", "Majority"), line_types = 2:1, color = TRUE,
+    color_palette = pal, main_title = "", x_axis_at = -2:2, lwd = 2
+)
+resps <- response_matrix[ , item]
+probs <- ggumProbability(resps, theta, alpha[item], delta[item], tau[[item]])
+points(theta, probs, pch = 19, col = pal[resps + 1], cex = 1.5)
+#            JG     AS    AM     CT     RG    SB    SA    SS     EK
+xadj <- c(-0.20, -0.12, 0.08, -0.04, -0.00,  0.00,  0.08,  0.00, -0.08)
+yadj <- c(-0.00,  0.08, 0.08,  0.08, -0.08, -0.08, -0.08, -0.08, -0.08)
+text(theta + xadj, probs + yadj, labels = j_id, col = pal[resps + 1])
+par(opar)
+dev.off()
+
+## Plot M-Q IRF for Arizona
+tiff(
+    filename = "plots/fig8b.tif",
+    width = 6, height = 4, units = "in",
+    res = 1000, compression = "lzw"
+)
+opar <- par(mar = c(3, 3, 1, 1) + 0.1)
+item <- 83
+mq_estimates <- full_estimates$mq_estimates
+theta <- mq_estimates[grepl(paste0("t", time_map[item]), names(mq_estimates))]
+alpha <- mq_estimates[paste("alpha", ids[item], sep = ".")]
+beta  <- mq_estimates[paste("beta", ids[item], sep = ".")]
+resps <- response_matrix[ , item]
+probs <- sapply(1:9, function(i) mq_prob(resps[i], alpha, beta, theta[i]))
+ones  <- mq_prob(1, alpha, beta, th_range)
+zeros <- mq_prob(0, alpha, beta, th_range)
+plot(
+    x = th_range, y = zeros,
+    type = "l", lty = 2, col = pal[1], lwd = 2,
+    ylim = c(0, 1.01), xaxt = "n", yaxt = "n",
+    main = "", xlab = "", ylab = ""
+)
+axis(
+    side = 2,
+    at = c(0, 0.25, 0.5, 0.75, 1),
+    labels = c("0", "0.25", "0.5", "0.75", "1"),
+    tick = FALSE, line = -0.75
+)
+title(ylab = expression(P[ij](k)), line = 1.5)
+axis(1, at = -3:3, tick = FALSE, line = -0.75)
+mtext(expression("Ideology (" * theta * ")"), side = 1, line = 1.5)
+lines(th_range, ones, col = pal[2], lwd = 2)
+points(theta, probs, pch = 19, col = pal[resps+1], cex = 1.5)
+#            JG     AS    AM     CT     RG    SB    SA    SS
+xadj <- c( 0.20, -0.08, 0.08, -0.08, -0.00,  0.00,  0.08,  0.00)
+yadj <- c( 0.08,  0.08, 0.08,  0.08, -0.08, -0.08, -0.08, -0.08)
+text(theta[-9] + xadj, probs[-9] + yadj, labels = j_id[-9], col = pal[resps+1])
+par(xpd = TRUE)
+legend(
+    "topleft", inset = c(0, -0.1), legend = c("Dissent", "Majority"),
+    lty = 2:1, horiz = TRUE, col = pal, bty = "n", lwd = 2
+)
+par(opar)
+dev.off()

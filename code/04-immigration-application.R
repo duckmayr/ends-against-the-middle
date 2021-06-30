@@ -55,28 +55,22 @@ sds <- tune_proposals(responses, 5000)
 sapply(sds, mean)
 temps <- tune_temperatures(responses, 6, proposal_sds = sds)
 temps
-save(sds, temps, file = "model-output/lucid-hypers.RData")
+save(sds, temps, file = "output/lucid-hypers.RData")
 ## Draw posterior samples
 chain1 <- ggumMC3(responses, proposal_sds = sds, temps = temps)
 ## Save output
-saveRDS(chain1, "model-output/lucid-chain1.rds")
+saveRDS(chain1, "output/lucid-chain1.rds")
 ## Use "All undocumented immigrants currently living in the U.S. should be
 ## required to return to their home country" to post-process results
 n <- nrow(responses)
 m <- ncol(responses)
 processed_chain <- post_process(chain1, n + m + 1, "+")
 posterior_summary <- summary(processed_chain)
-saveRDS(posterior_summary, "model-output/lucid-posterior.rds")
+saveRDS(posterior_summary, "output/lucid-posterior.rds")
 theta <- posterior_summary$estimates$theta
 alpha <- posterior_summary$estimates$alpha
 delta <- posterior_summary$estimates$delta
 tau   <- posterior_summary$estimates$tau
-
-quantile(theta, probs = c(0.025, 0.975))
-icc(alpha[1], delta[1], tau[[1]], from = -1.68, to = 1.74)
-icc(alpha[1], delta[1], tau[[1]], from = min(theta), to = max(theta))
-icc(alpha, delta, tau, from = min(theta), to = max(theta),
-    plot_responses = TRUE, thetas = theta, responses = responses, sub = 1:10)
 
 
 ##### Assess convergence -----
@@ -91,27 +85,16 @@ summary(convergence$psrf[ , 1])
 ## Fit the GRM model and get the ability scores
 grm_fit  <- grm(responses + 1)
 grm_ideo <- factor.scores(grm_fit, resp.patterns = responses)
-## Look at discrimination parameters
-cbind(grm = round(sapply(grm_fit$coefficients, '[[', "beta"), 3),
-      ggum = round(alpha, 3))
-## Look at GRM correlation with seven point ideology
-cor(vinfo$ideo, grm_ideo$score.dat$z1, use = "pairwise")
-## Look at GRM correlation with GGUM
-cor(theta, grm_ideo$score.dat$z1)
-## Look at GGUM correlation with seven point ideology
-cor(vinfo$ideo, theta, use = "pairwise")
 ## Look at correlation between GGUM theta, GRM theta, and self ideo
-cor(cbind(self_ideo = vinfo$ideo,
-          grm_ideo = grm_ideo$score.dat$z1,
-          ggum_ideo = theta),
-    use = "pairwise")
-parmat <- cbind(self_ideo = vinfo$ideo,
-                ggum_ideo = theta,
-                grm_ideo = grm_ideo$score.dat$z1)
-varlabs <- c("Self Ideo", "GGUM", "GRM")
-opar <- par(mar = c(0, 0, 0, 0) + 0.1)
-pairs(parmat, labels = varlabs, pch = 19, col = paste0(okabe_ito()[5], "80"))
-par(opar)
+## (referenced in Section 5.1)
+cor(
+    cbind(
+        self_ideo = vinfo$ideo,
+        grm_ideo = grm_ideo$score.dat$z1,
+        ggum_ideo = theta
+    ),
+    use = "pairwise"
+)
 
 
 ##### Reproduce Figure 6 -----
@@ -128,8 +111,7 @@ irf_probs <- function(alpha, delta, tau, theta_range = c(-2.75, 2.5)) {
 response_options <- c(
     "Strongly Disagree", "Disagree", "Neither", "Agree", "Strongly Agree"
 )
-option_colors <- tail(okabe_ito(), length(response_options))
-option_colors <- okabe_ito()[c(6, 1, 8, 2, 5)]
+option_colors <- colorRampPalette(colors = c("#808080", "black"))(5)
 grm_item9  <- plot(grm_fit, zrange = c(-2.25, 2.25), items = 9)
 grm_item2  <- plot(grm_fit, zrange = c(-2.25, 2.25), items = 2)
 grm_item4  <- plot(grm_fit, zrange = c(-2.25, 2.25), items = 4)
@@ -137,6 +119,66 @@ theta_plot <- seq(-2.75, 2.5, 0.01)
 ggum_item9 <- irf_probs(alpha[9], delta[9], tau[[9]])
 ggum_item2 <- irf_probs(alpha[2], delta[2], tau[[2]])
 ggum_item4 <- irf_probs(alpha[4], delta[4], tau[[4]])
+## Plot Item 2:
+dat <- data.frame(
+    Model  = c(rep("GGUM", n1 * 5), rep("GRM", n2 * 5)),
+    Option = factor(c(rep(opts, each = n1), rep(opts, each = n2)),
+                    levels = opts),
+    theta  = c(rep(theta_plot, 5), rep(grm_item2$z, 5)),
+    p      = c(c(ggum_item2), c(grm_item2$pr$IMM_2))
+)
+map <- aes(x = theta, y = p, color = Option, linetype = Option, group = Option)
+plt <- ggplot(data = dat, mapping = map) +
+    geom_line() +
+    facet_wrap(~ Model, scales = "free_x") +
+    scale_color_manual(values = option_colors) +
+    scale_linetype_manual(values = 5:1) +
+    xlab(expression(theta)) +
+    ylab("Probability") +
+    theme_bw() + 
+    theme(
+        panel.grid = element_blank(),
+        legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.title = element_blank(),
+        strip.background = element_rect(fill = "white"),
+        legend.box.spacing = unit(0, "in")
+    )
+ggsave(
+    filename = "plots/fig6a.tif", plot = plt, device = "tiff",
+    width = 6.5, height = 2.5, units = "in",
+    dpi = 1000, compression = "lzw"
+)
+## Plot Item 4:
+dat <- data.frame(
+    Model  = c(rep("GGUM", n1 * 5), rep("GRM", n2 * 5)),
+    Option = factor(c(rep(opts, each = n1), rep(opts, each = n2)),
+                    levels = opts),
+    theta  = c(rep(theta_plot, 5), rep(grm_item4$z, 5)),
+    p      = c(c(ggum_item4), c(grm_item4$pr$IMM_4))
+)
+map <- aes(x = theta, y = p, color = Option, linetype = Option, group = Option)
+plt <- ggplot(data = dat, mapping = map) +
+    geom_line() +
+    facet_wrap(~ Model, scales = "free_x") +
+    scale_color_manual(values = option_colors) +
+    scale_linetype_manual(values = 5:1) +
+    xlab(expression(theta)) +
+    ylab("Probability") +
+    theme_bw() + 
+    theme(
+        panel.grid = element_blank(),
+        legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.title = element_blank(),
+        strip.background = element_rect(fill = "white"),
+        legend.box.spacing = unit(0, "in")
+    )
+ggsave(
+    filename = "plots/fig6b.tif", plot = plt, device = "tiff",
+    width = 6.5, height = 2.5, units = "in",
+    dpi = 1000, compression = "lzw"
+)
 ## Plot Item 9:
 n1 <- length(theta_plot)
 n2 <- length(grm_item9$z)
@@ -149,7 +191,7 @@ dat <- data.frame(
     p      = c(c(ggum_item9), c(grm_item9$pr$IMM_9))
 )
 map <- aes(x = theta, y = p, color = Option, linetype = Option, group = Option)
-ggplot(data = dat, mapping = map) +
+plt <- ggplot(data = dat, mapping = map) +
     geom_line() +
     facet_wrap(~ Model, scales = "free_x") +
     scale_color_manual(values = option_colors) +
@@ -165,71 +207,23 @@ ggplot(data = dat, mapping = map) +
         strip.background = element_rect(fill = "white"),
         legend.box.spacing = unit(0, "in")
     )
-ggsave("plots/ggum-grm-IRFs-item9.pdf", width = 6.5, height = 2.5)
-## Plot Item 2:
-dat <- data.frame(
-    Model  = c(rep("GGUM", n1 * 5), rep("GRM", n2 * 5)),
-    Option = factor(c(rep(opts, each = n1), rep(opts, each = n2)),
-                    levels = opts),
-    theta  = c(rep(theta_plot, 5), rep(grm_item2$z, 5)),
-    p      = c(c(ggum_item2), c(grm_item2$pr$IMM_2))
+ggsave(
+    filename = "plots/fig6c.tif", plot = plt, device = "tiff",
+    width = 6.5, height = 2.5, units = "in",
+    dpi = 1000, compression = "lzw"
 )
-map <- aes(x = theta, y = p, color = Option, linetype = Option, group = Option)
-ggplot(data = dat, mapping = map) +
-    geom_line() +
-    facet_wrap(~ Model, scales = "free_x") +
-    scale_color_manual(values = option_colors) +
-    scale_linetype_manual(values = 5:1) +
-    xlab(expression(theta)) +
-    ylab("Probability") +
-    theme_bw() + 
-    theme(
-        panel.grid = element_blank(),
-        legend.position = "bottom",
-        legend.direction = "horizontal",
-        legend.title = element_blank(),
-        strip.background = element_rect(fill = "white"),
-        legend.box.spacing = unit(0, "in")
-    )
-ggsave("plots/ggum-grm-IRFs-item2.pdf", width = 6.5, height = 2.5)
-## Plot Item 4:
-dat <- data.frame(
-    Model  = c(rep("GGUM", n1 * 5), rep("GRM", n2 * 5)),
-    Option = factor(c(rep(opts, each = n1), rep(opts, each = n2)),
-                    levels = opts),
-    theta  = c(rep(theta_plot, 5), rep(grm_item4$z, 5)),
-    p      = c(c(ggum_item4), c(grm_item4$pr$IMM_4))
-)
-ggplot(data = dat, mapping = map) +
-    geom_line() +
-    facet_wrap(~ Model, scales = "free_x") +
-    scale_color_manual(values = option_colors) +
-    scale_linetype_manual(values = 5:1) +
-    xlab(expression(theta)) +
-    ylab("Probability") +
-    theme_bw() + 
-    theme(
-        panel.grid = element_blank(),
-        legend.position = "bottom",
-        legend.direction = "horizontal",
-        legend.title = element_blank(),
-        strip.background = element_rect(fill = "white"),
-        legend.box.spacing = unit(0, "in")
-    )
-ggsave("plots/ggum-grm-IRFs-item4.pdf", width = 6.5, height = 2.5)
 
 
 ##### Fit statistics (mentioned in text) -----
-prop_correct <- function(observed, classification) {
-    return(mean(observed == classification, na.rm = TRUE))
-}
 ggum_preds <- array(0, dim = c(n, m, 5))
 for ( k in 0:4 ) {
     tmp <- matrix(k, nrow = n, ncol = m)
     ggum_preds[ , , k+1] <- ggumProbability(tmp, theta, alpha, delta, tau)
 }
-grm_preds  <- fitted(grm_fit, resp.patterns = responses + 1,
-                     type = "conditional-probabilities")
+grm_preds  <- fitted(
+    grm_fit, resp.patterns = responses + 1,
+    type = "conditional-probabilities"
+)
 ## Need to convert from list to array
 list_to_array <- function(list_in) {
     dims <- c(nrow(list_in[[1]]), ncol(list_in[[1]]), length(list_in))
@@ -238,8 +232,6 @@ list_to_array <- function(list_in) {
 grm_preds  <- aperm(list_to_array(grm_preds), c(1, 3, 2))
 ggum_classifications <- apply(ggum_preds, 1:2, which.max)
 grm_classifications  <- apply(grm_preds, 1:2, which.max)
-prop_correct(responses + 1, ggum_classifications)
-prop_correct(responses + 1, grm_classifications)
 actual <- factor(c(responses + 1))
 caret::confusionMatrix(factor(c(grm_classifications)),  actual)
 caret::confusionMatrix(factor(c(ggum_classifications)), actual)

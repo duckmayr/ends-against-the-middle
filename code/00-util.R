@@ -281,3 +281,126 @@ plot_coords <- function(
         }
     }
 }
+
+
+## This is a slight modification of bggum's irf() function
+## (just for convenience in the Court application)
+custom_irf <- function(a, d, t, from = -3, to = 3, by = 0.01, layout_matrix = 1,
+                       main_title = "Item Response Function", sub = "",
+                       option_names = NULL, line_types = NULL, color = FALSE,
+                       color_palette = "default", rug = FALSE, thetas = NULL,
+                       responses = NULL, sides = 1, rug_colors = "black",
+                       x_axis_at = from:to, lwd = 1) {
+    if ( length(a) != length(d) | (length(a) > 1 & length(a) != length(t)) ) {
+        stop("Please provide a, d, and t of the same length.", call. = FALSE)
+    }
+    m <- length(a)
+    if ( rug & is.null(responses) ) {
+        stop("Please provide responses when rug = TRUE.", call. = FALSE)
+    }
+    if ( rug & is.null(thetas) ) {
+        stop("Please provide theta estimates when rug = TRUE.", call. = FALSE)
+    }
+    if ( !is.null(responses) ) {
+        if ( is.vector(responses) ) {
+            responses <- matrix(responses, ncol = 1)
+        }
+        if ( length(dim(responses)) != 2 ) {
+            # In case some random data structure we can't use is passed
+            # (e.g. a list rather than a vector, matrix, or data frame)
+            stop(paste("Please provide a vector or rectangular data structure",
+                       "for responses."), call. = FALSE)
+        }
+        if ( ncol(responses) != m ) {
+            stop("Please provide responses for all items when rug = TRUE.",
+                 call. = FALSE)
+        }
+    }
+    opar <- par(xpd = TRUE)
+    if ( length(main_title) == 1 ) {
+        main_title <- rep(main_title, m)
+    }
+    if ( length(sub) == 1 ) {
+        sub <- rep(sub, m)
+    }
+    graphics::layout(layout_matrix)
+    th <- seq(from = from, to = to, by = by)
+    if ( is.list(t) ) {
+        K <- sapply(t, length)
+    }
+    else {
+        K <- length(t)
+        t <- list(t)
+    }
+    if ( color ) {
+        colors <- switch(color_palette[1],
+                         default = default,
+                         default_alpha = default_alpha,
+                         wong = wong,
+                         wong_alpha = wong_alpha,
+                         color_palette
+        )
+        if ( length(colors) < max(K) ) {
+            colors <- rep(colors, length.out = max(K))
+        }
+    }
+    else {
+        colors <- rep("black", max(K))
+    }
+    option_vector <- 1:max(K)
+    if ( is.null(option_names) ) {
+        option_names <- paste("Option", option_vector)
+    }
+    if ( is.null(line_types) ) {
+        line_types <- option_vector
+    }
+    else {
+        if ( length(line_types) == 1 ) {
+            line_types = rep(line_types, max(K))
+        }
+    }
+    if ( length(sides) == 1 ) {
+        sides <- rep(sides, max(K))
+    }
+    rug_colors <- switch(rug_colors[1],
+                         default = default,
+                         default_alpha = default_alpha,
+                         wong = wong,
+                         wong_alpha = wong_alpha,
+                         rug_colors
+    )
+    if ( length(rug_colors) < max(K) ) {
+        rug_colors <- rep(rug_colors, length.out = max(K))
+    }
+    for ( j in 1:m ) {
+        y <- sapply(th, function(x) ggumProbability(0, x, a[j], d[j], t[[j]]))
+        graphics::plot(x = th, y = y, col = colors[1], type = "l", lwd = lwd,
+                       main = paste(main_title[j], sub[j]),
+                       xlab = "", xaxt = "n", ylab = "", yaxt = "n",
+                       xlim = c(from, to), ylim=c(0, 1.01),
+                       lty = line_types[1])
+        graphics::axis(side = 2, at = c(0, 0.25, 0.5, 0.75, 1),
+                       labels = c("0", "0.25", "0.5", "0.75", "1"),
+                       tick = FALSE, line = -0.75)
+        graphics::title(ylab = expression(P[ij](k)), line = 1.5)
+        axis(1, at = x_axis_at, tick = FALSE, line = -0.75)
+        mtext(expression("Ideology (" * theta * ")"), side = 1, line = 1.5)
+        for ( k in 2:K[j] ) {
+            graphics::lines(th, sapply(th, function(x) {
+                ggumProbability(k-1, x, a[j], d[j], t[[j]])
+            }), lty = line_types[k], col = colors[k], lwd = lwd)
+        }
+        graphics::legend("topleft", inset = c(0, -0.1), option_names, lty = line_types,
+                         horiz = TRUE, bty = "n", col = colors, lwd = lwd)
+        if ( rug ) {
+            for ( k in 1:K[j] ) {
+                idx <- which(responses[ , j] == k - 1)
+                k_thetas <- thetas[idx]
+                graphics::rug(k_thetas, side = sides[k], col = rug_colors[k])
+            }
+        }
+    }
+    graphics::layout(1) # resets layout
+    par(opar)
+}
+
