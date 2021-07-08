@@ -13,8 +13,6 @@ library(parallel)  ## For running chains in parallel
 source("code/00-util.R")
 ## Ensure required directories exist
 prepare_directories()
-## Compile functions to get log likelihoods:
-Rcpp::sourceCpp("code/log_likelihood.cpp")
 
 
 ##### Prepare data -----
@@ -105,34 +103,6 @@ saveRDS(cjr_chain, file = "output/cjr-house-chain.rds")
 ## Summarise posterior
 cjr_posterior_summary <- summary(cjr_chain)
 saveRDS(cjr_posterior_summary, file = "output/cjr-post-summary.rds")
-
-
-##### Compare log likelihood and theta s.d.s -----
-## Get the log likelihood for CJR
-cjr_house_loglik <- cjr_log_likelihood(responses, cjr_chain)
-cjr_house_loglik
-# [1] -37308.42
-cjr_house_loglik / sum(!is.na(responses))
-# [1] -0.1062618
-cjr_house_loglik / prod(dim(responses))
-# [1] -0.1006844
-## Get theta sds for CJR
-cjr_sds <- cjr_posterior_summary$statistics[ , "SD"]
-summary(cjr_sds[grepl("theta", names(cjr_sds))])
-#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-# 0.03663 0.06084 0.07420 0.11799 0.16333 0.39210
-## Get theta sds for GGUM
-summary(ggum_posterior_summary$sds$theta_sds)
-#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-# 0.04824 0.05862 0.06653 0.08282 0.11191 0.18116
-## Get the log likelihood for GGUM
-ggum_house_loglik <- ggum_log_likelihood(responses, processed_ggum_chains[[1]])
-ggum_house_loglik
-# [1] -34594.62
-ggum_house_loglik / sum(!is.na(responses))
-# [1] -0.09853239
-ggum_house_loglik / prod(dim(responses))
-# [1] -0.09336071
 
 
 ##### Reproduce Figure 10 -----
