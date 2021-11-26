@@ -329,16 +329,3 @@ comparison <- data.frame(
     `GGUM SD`   = sprintf("%0.2f", c(t2theta_sd[t2order], t3theta_sd[t3order]))
 )
 comparison
-
-
-j <- which(colnames(responses) == "652")
-pdf("folio-652.pdf", height = 3, width = 5)
-irf(
-    rug = TRUE, thetas = theta, responses = responses[ , j], sides = c(1, 3),
-    a = estimates$estimates$alpha[j],
-    d = estimates$estimates$delta[j], t = estimates$estimates$tau[[j]],
-    from = min(theta), to = max(theta),
-    sub = colnames(responses)[j], option_names = names(types[[j]])
-)
-dev.off()
-
