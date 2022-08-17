@@ -315,8 +315,8 @@ term3EMRsd <- c(
 )
 
 ## Now put it all together for the comparison table
-t2order    <- order(term2theta)
-t3order    <- order(term3theta)
+t2order    <- order(t2theta)
+t3order    <- order(t3theta)
 t2members  <- rownames(t2responses)[t2order]
 t3members  <- rownames(t3responses)[t3order]
 comparison <- data.frame(
