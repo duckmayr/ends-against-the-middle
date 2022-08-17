@@ -305,6 +305,16 @@ prop_nonmonotonic(ggum_posterior_summary)
 
 
 ##### Reproduce Figure E.2 -----
+
+## Run W-NOMINATE on 116th data
+rc  <- rollcall(responses)
+i1  <- which.max(member_data$nominate_dim1)
+i2  <- which.max(member_data$nominate_dim2)
+aic <- match(member_data[c(i1, i2), "icpsr"], rownames(responses))
+nominate2d <- wnominate(rc, dims = 2, lop = 0.01, polarity = aic)
+saveRDS(nominate2d, file = "output/H116-nominate2d.rds")
+
+## Plot results
 squad_col   <- "#80008080"
 dem_col     <- "#00008080"
 rep_col     <- "#80000080"
@@ -318,14 +328,6 @@ dev.off()
 
 
 ##### Reproduce Figure E.1 -----
-
-## Run W-NOMINATE on 116th data
-rc  <- rollcall(responses)
-i1  <- which.max(member_data$nominate_dim1)
-i2  <- which.max(member_data$nominate_dim2)
-aic <- match(member_data[c(i1, i2), "icpsr"], rownames(responses))
-nominate2d <- wnominate(rc, dims = 2, lop = 0.01, polarity = aic)
-saveRDS(nominate2d, file = "output/H116-nominate2d.rds")
 
 ## Run 2D CJR on 116th data
 dim1j <- which.max(with(nominate2d$rollcalls, midpoint1D - spread1D))
