@@ -77,4 +77,4 @@ legend(
 ## Reset the margins
 par(opar)
 ## And close the plotting device
-dev.off()
+invisible(dev.off())

@@ -237,7 +237,7 @@ pdf("plots/figF2.pdf", height = 6, width = 6)
 opar <- par(mar = c(0, 0, 0, 0) + 0.1)
 pairs(parmat, labels = varlabs, pch = 19, col = paste0(okabe_ito()[5], "80"))
 par(opar)
-dev.off()
+invisible(dev.off())
 
 
 ##### Reproduce Figure F3 -----
@@ -248,7 +248,7 @@ trimplot(
     ylab = bquote(group("|", " GGUM "*theta*" ", "|")),
     pch = 19, col = "#80808080"
 )
-dev.off()
+invisible(dev.off())
 
 
 ##### Reproduce Table F1 -----
@@ -409,7 +409,7 @@ trimplot(
     ylab = "Density", xlab = bquote("Ideology ("*theta*")"),
     main = "Barry Goldwater Theta Density (Post-processed)"
 )
-dev.off()
+invisible(dev.off())
 
 
 ##### Reproduce Figure F4 -----
@@ -441,7 +441,7 @@ trimplot(
 legend("topleft", legend = c("Southern Democrat", "Other"), bty = "n",
        col = c("#ff0000", "#333333"), pch = c(19, 1))
 par(opar)
-dev.off()
+invisible(dev.off())
 
 
 ##### Reproduce Table F2 -----

@@ -228,7 +228,7 @@ points(t2theta[twos],  p[twos],  pch = 19, col = paste0(pal[3], "80"), cex = 1.5
 legend("top", inset = c(0, -0.2), lty = c(2, 3, 1), bty = "n", horiz = TRUE,
        legend = c("Nay", "Abstain", "Yea"), col = pal, lwd = 2)
 par(opar)
-dev.off()
+invisible(dev.off())
 
 ## Reproduce panel (b) (folio 878)
 j   <- which(colnames(t2responses) == "878")
@@ -251,7 +251,7 @@ points(t2theta[zeros], p[zeros], pch = 19, col = paste0(pal[1], "80"), cex = 1.5
 legend("top", inset = c(0, -0.2), lty = 2:1, bty = "n", horiz = TRUE,
        legend = c("Nay", "Yea"), col = pal, lwd = 2)
 par(opar)
-dev.off()
+invisible(dev.off())
 
 
 ##### Reproduce Table K1 -----

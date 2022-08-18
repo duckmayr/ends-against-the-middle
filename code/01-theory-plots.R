@@ -70,7 +70,7 @@ legend(
 ## Reset the margins
 par(opar)
 ## And close the plotting device
-dev.off()
+invisible(dev.off())
 
 ##### Figure 1(b)
 ## Set example parameter values:
@@ -118,7 +118,7 @@ legend(
 ## Reset the margins
 par(opar)
 ## And close the plotting device
-dev.off()
+invisible(dev.off())
 
 
 ##### Reproduce Figure 2 -----
@@ -166,7 +166,7 @@ legend(
 ## Reset the margins
 par(opar)
 ## And close the plotting device
-dev.off()
+invisible(dev.off())
 
 ##### Figure 2(b)
 ## Set example parameter values:
@@ -208,7 +208,7 @@ legend(
 ## Reset the margins
 par(opar)
 ## And close the plotting device
-dev.off()
+invisible(dev.off())
 
 
 ##### Reproduce Figure 3 -----
@@ -267,7 +267,7 @@ legend(
 ## Reset the margins
 par(opar)
 ## And close the plotting device
-dev.off()
+invisible(dev.off())
 
 
 ##### Reproduce Figures A.1-3 -----
@@ -284,17 +284,17 @@ tau   <- c(0, -1)
 alpha <- 0.5
 pdf("plots/figA1a.pdf", width = 6, height = 4)
 irf(alpha, delta, tau, main_title = "")
-dev.off()
+invisible(dev.off())
 ## panel (b) has alpha = 1.0
 alpha <- 1.0
 pdf("plots/figA1b.pdf", width = 6, height = 4)
 irf(alpha, delta, tau, main_title = "")
-dev.off()
+invisible(dev.off())
 ## panel (c) has alpha = 2.0
 alpha <- 2.0
 pdf("plots/figA1c.pdf", width = 6, height = 4)
 irf(alpha, delta, tau, main_title = "")
-dev.off()
+invisible(dev.off())
 
 ##### Figure A.2
 ## alpha and tau don't change for this one; set them now
@@ -304,17 +304,17 @@ tau   <- c(0, -1)
 delta <- -1
 pdf("plots/figA2a.pdf", width = 6, height = 4)
 irf(alpha, delta, tau, main_title = "")
-dev.off()
+invisible(dev.off())
 ## panel (b) has delta =  0
 delta <-  0
 pdf("plots/figA2b.pdf", width = 6, height = 4)
 irf(alpha, delta, tau, main_title = "")
-dev.off()
+invisible(dev.off())
 ## panel (c) has delta =  1
 delta <-  1
 pdf("plots/figA2c.pdf", width = 6, height = 4)
 irf(alpha, delta, tau, main_title = "")
-dev.off()
+invisible(dev.off())
 
 ##### Figure A.3
 ## alpha and delta don't change for this one; set them now
@@ -324,17 +324,17 @@ delta <- 0
 tau   <- c(0, -0.5)
 pdf("plots/figA3a.pdf", width = 6, height = 4)
 irf(alpha, delta, tau, main_title = "")
-dev.off()
+invisible(dev.off())
 ## panel (b) has tau = (0, -1.0)
 tau   <- c(0, -1.0)
 pdf("plots/figA3b.pdf", width = 6, height = 4)
 irf(alpha, delta, tau, main_title = "")
-dev.off()
+invisible(dev.off())
 ## panel (c) has tau = (0, -2.0)
 tau   <- c(0, -2.0)
 pdf("plots/figA3c.pdf", width = 6, height = 4)
 irf(alpha, delta, tau, main_title = "")
-dev.off()
+invisible(dev.off())
 
 
 ##### Reproduce Figure B.1 -----
@@ -371,4 +371,4 @@ for ( i in c(241, 445) ) {
     mtext(side = 2, line = 0.25, text = expression(L(X[i])))
 }
 par(opar)
-dev.off()
+invisible(dev.off())

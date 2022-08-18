@@ -332,7 +332,7 @@ xadj <- c(-0.08, -0.08, 0.08,  0.08,  0.08, -0.08,  0.00, -0.20, -0.08)
 yadj <- c(-0.08,  0.08, 0.08, -0.08,  0.08,  0.08, -0.08,  0.00, -0.08)
 text(theta + xadj, probs + yadj, labels = j_id, col = pal[resps + 1])
 par(opar)
-dev.off()
+invisible(dev.off())
 
 ## Plot M-Q IRF for Wynne
 tiff(
@@ -377,7 +377,7 @@ legend(
     lty = 2:1, horiz = TRUE, col = pal, bty = "n", lwd = 2
 )
 par(opar)
-dev.off()
+invisible(dev.off())
 
 
 ##### Reproduce Figure 8 -----
@@ -418,7 +418,7 @@ xadj <- c(-0.20, -0.12, 0.08, -0.04, -0.00,  0.00,  0.08,  0.00, -0.08)
 yadj <- c(-0.00,  0.08, 0.08,  0.08, -0.08, -0.08, -0.08, -0.08, -0.08)
 text(theta + xadj, probs + yadj, labels = j_id, col = pal[resps + 1])
 par(opar)
-dev.off()
+invisible(dev.off())
 
 ## Plot M-Q IRF for Arizona
 tiff(
@@ -463,4 +463,4 @@ legend(
     lty = 2:1, horiz = TRUE, col = pal, bty = "n", lwd = 2
 )
 par(opar)
-dev.off()
+invisible(dev.off())

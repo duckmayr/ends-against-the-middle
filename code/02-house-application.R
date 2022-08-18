@@ -144,7 +144,7 @@ legend(
 ## Reset the margins
 par(opar)
 ## And close the plotting device
-dev.off()
+invisible(dev.off())
 ## Look at outliers
 comparison <- data.frame(
     icpsr = icpsrs,
@@ -203,7 +203,7 @@ rug(theta[responses[ , item] == 0], side = 1)
 ## Reset the margins
 par(opar)
 ## And close the plotting device
-dev.off()
+invisible(dev.off())
 
 ## Plot IRF for H.R. 2740 (panel (b))
 item <- which(colnames(responses) == "366")
@@ -233,7 +233,7 @@ rug(theta[responses[ , item] == 0], side = 1)
 ## Reset the margins
 par(opar)
 ## And close the plotting device
-dev.off()
+invisible(dev.off())
 
 
 ##### Reproduce Figures I.1-I.4 -----
@@ -249,7 +249,7 @@ trimplot(ths, y = probs, type = "l", xlab = xlabel, ylab = ylabel)
 rug(theta[responses[ , item] == 1], side = 3)
 rug(theta[responses[ , item] == 0], side = 1)
 par(opar)
-dev.off()
+invisible(dev.off())
 
 ## Plot IRFs for Figure I.2: Humanitarian Aid for Immigrants
 ## (Plot IRFs for H.R. 3401 (Border security appropriations))
@@ -262,7 +262,7 @@ trimplot(ths, y = probs, type = "l", xlab = xlabel, ylab = ylabel)
 rug(theta[responses[ , item] == 1], side = 3)
 rug(theta[responses[ , item] == 0], side = 1)
 par(opar)
-dev.off()
+invisible(dev.off())
 ## Senate version -- panel (b)
 item <- which(colnames(responses) == "428")
 probs <- ggumProbability(rep(1, N), ths, alpha[item], delta[item], tau[[item]])
@@ -272,7 +272,7 @@ trimplot(ths, y = probs, type = "l", xlab = xlabel, ylab = ylabel)
 rug(theta[responses[ , item] == 1], side = 3)
 rug(theta[responses[ , item] == 0], side = 1)
 par(opar)
-dev.off()
+invisible(dev.off())
 
 ## Plot IRF for Figure I.3: A 2 State Solution to the Israel-Palestine Conflict
 ## (H. Res. 326 (Two state solution to Israel-Palestine conflict))
@@ -284,7 +284,7 @@ trimplot(ths, y = probs, type = "l", xlab = xlabel, ylab = ylabel)
 rug(theta[responses[ , item] == 1], side = 3)
 rug(theta[responses[ , item] == 0], side = 1)
 par(opar)
-dev.off()
+invisible(dev.off())
 
 ## Plot IRF for I.4: The HEROES Act
 ## (H. Res. 866 (HEROES Act rule))
@@ -296,7 +296,7 @@ trimplot(ths, y = probs, type = "l", xlab = xlabel, ylab = ylabel)
 rug(theta[responses[ , item] == 1], side = 3)
 rug(theta[responses[ , item] == 0], side = 1)
 par(opar)
-dev.off()
+invisible(dev.off())
 
 
 ##### Determine how many roll calls have non-monotonic IRFs -----
@@ -324,7 +324,7 @@ pdf("plots/figE2.pdf")
 opar <- par(mar = c(4, 4, 1, 1) + 0.1)
 plot_coords(nominate2d, plotBy = party)
 par(opar)
-dev.off()
+invisible(dev.off())
 
 
 ##### Reproduce Figure E.1 -----
@@ -413,7 +413,7 @@ trimplot(cjr_dim1, ggum_ideo, xlab = "2D CJR Dim. 1", ylab = "GGUM Ideology",
 legend("topleft", pch = 15:17, col = c(dem_col, rep_col, squad_col),
        bty = "n", legend = c("Republicans", "Democrats", "The Squad"))
 par(opar)
-dev.off()
+invisible(dev.off())
 
 ## Panel (b): 2D DW-NOMINATE Dim. 1 vs. GGUM
 dw_nom_ideo <- with(member_data, nominate_dim1[match(icpsrs, icpsr)])
@@ -429,7 +429,7 @@ legend(
     bty = "n", legend = c("Republicans", "Democrats", "The Squad")
 )
 par(opar)
-dev.off()
+invisible(dev.off())
 
 ## Panel (c): 2D W-NOMINATE Dim. 1 vs. GGUM
 w_nom_ideo <- nominate2d$legislators$coord1D
@@ -445,7 +445,7 @@ legend(
     bty = "n", legend = c("Republicans", "Democrats", "The Squad")
 )
 par(opar)
-dev.off()
+invisible(dev.off())
 
 ## Panel (d): 2D W-NOMINATE Dim. 1 vs. GGUM, 115th Congress
 MCs_used    <- rownames(nom2d115$legislators)
@@ -473,7 +473,7 @@ legend(
     bty = "n", legend = c("Republicans", "Democrats", "Liberty Caucus")
 )
 par(opar)
-dev.off()
+invisible(dev.off())
 
 
 ##### Reproduce Figures E3-5 -----
@@ -519,7 +519,7 @@ trimplot(ths, y = probs, type = "l", xlab = xlabel, ylab = ylabel)
 rug(nom1d_dim1[responses[ , item] == 1], side = 3)
 rug(nom1d_dim1[responses[ , item] == 0], side = 1)
 par(opar)
-dev.off()
+invisible(dev.off())
 
 ## Plot Figure E4(b)
 ## (NOMINATE IRF for H.R. 2740)
@@ -532,7 +532,7 @@ trimplot(ths, y = probs, type = "l", xlab = xlabel, ylab = ylabel)
 rug(nom1d_dim1[responses[ , item] == 1], side = 3)
 rug(nom1d_dim1[responses[ , item] == 0], side = 1)
 par(opar)
-dev.off()
+invisible(dev.off())
 
 ## Plot Figure E5(b)
 ## (NOMINATE IRF for H. Res. 326)
@@ -545,7 +545,7 @@ trimplot(ths, y = probs, type = "l", xlab = xlabel, ylab = ylabel)
 rug(nom1d_dim1[responses[ , item] == 1], side = 3)
 rug(nom1d_dim1[responses[ , item] == 0], side = 1)
 par(opar)
-dev.off()
+invisible(dev.off())
 
 
 ##### Reproduce Table E.1 -----

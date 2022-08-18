@@ -95,7 +95,7 @@ lines(cold_samples[1:1000, i], col = pal["cold"], lwd = 2)
 ## Reset the margins
 par(opar)
 ## And close the plotting device
-dev.off()
+invisible(dev.off())
 
 ## Setup the plotting device for panel (b): Trace plot of hot chain
 tiff(
@@ -118,7 +118,7 @@ lines(hot_samples[1:1000, i],  col = pal["hot"], lwd = 2)
 ## Reset the margins
 par(opar)
 ## And close the plotting device
-dev.off()
+invisible(dev.off())
 
 ## Setup the plotting device for panel (c): Density plots together
 tiff(
@@ -153,4 +153,4 @@ legend(
 ## Reset the margins
 par(opar)
 ## And close the plotting device
-dev.off()
+invisible(dev.off())
