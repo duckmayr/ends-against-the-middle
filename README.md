@@ -16,6 +16,13 @@ R Project file in the root of this directory that should be of use. However,
 using RStudio should not be required to reproduce our results; you may instead
 run the included R scripts (for example) via the command line `Rscript` tool.
 
+We used a machine with a CPU with 12 logical cores (6 physical cores with
+hyperthreading) and 64 GB of RAM (as well as a 64 GB swap file). On such a
+machine, reproducing all results takes approximately 21 days, or 3 weeks;
+approximately 7 days can be shaved off this time if you avoid running the
+software comparison for Appendix C.3 which occurs in the file
+`code/10-software-comparison.R`.
+
 ## Instruction
 
 To reproduce our results:
@@ -25,7 +32,23 @@ To reproduce our results:
     handles some changes to R beginning with R 4.1 which broke that version of
     `GGUM`. The version of the package currently available on CRAN, v0.4-3,
     should be equivalent to our lightly patched version of version 0.4-2.
-    All other required R extension packages should be available on CRAN.
+    Install version 1.2 of the `oc` package; at the time of this writing it
+    can't be installed using `install.packages()`, but you should be able to do
+    so via the R command `devtools::install_version("oc", version = "1.2", repos = "http://cloud.r-project.org")`.
+    All other required R extension packages should be available on CRAN;
+    if you would like to use the same versions we used, they are as follows:
+    - `bggum`: version 1.0.2
+    - `coda`: version 0.19-4
+    - `devtools`: version 2.4.2
+    - `dplyr`: 1.0.7
+    - `ggplot2`: 3.3.5
+    - `ltm`: 1.1-1
+    - `MCMCpack`: 1.5-0
+    - `pROC`: 1.17.0.1
+    - `Rcpp`: 1.0.7
+    - `tibble`: 3.1.4
+    - `tidyr`: 1.1.3
+    - `wnominate`: 1.2.5
  2. Run the R script `code/01-theory-plots.R`. This reproduces Figures 1, 2, 3,
     A1, A2, A3, and B1.
  3. Run the R script `code/02-house-application.R`. This reproduces Figures 9,
