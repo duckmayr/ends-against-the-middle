@@ -21,7 +21,7 @@ do
             ;;
         "-i" | "--install")
             echo "Installing required packages"
-            # Rscript "code/zz-install.R"
+            Rscript --no-echo "code/zz-install.R"
             ;;
         "-n" | "--no-comparison")
             COMPARISON="DON'T"
@@ -33,7 +33,7 @@ do
 done
 
 echo "Reproducing Figures 1-3, A1-A3, and B1"
-Rscript --quiet "code/01-theory-plots.R"
+Rscript "code/01-theory-plots.R"
 
 echo "Reproducing Figures 9-10, E1-E5, and I1-I4 and Table E1"
 # Rscript "code/02-house-application.R"
