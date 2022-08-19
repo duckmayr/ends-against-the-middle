@@ -305,8 +305,9 @@ i <- which(tab$Model == "2D W-NOMINATE")
 fits <- nominate2d$fits
 tab$`Proportion Correct`[i] <- sprintf("%0.2f", fits["correctclass2D"] / 100)
 tab$APRE[i] <- sprintf("%0.2f", fits["apre2D"])
-## Display the table
-tab
+## Display/save the table
+# tab
+write.csv(tab, file = "tables/TableF1.csv", row.names = FALSE)
 
 
 ##### 92nd Senate data prep -----
@@ -473,6 +474,6 @@ i <- which(tab$Model == "2D W-NOMINATE")
 fits <- nominate2d$fits
 tab$`Proportion Correct`[i] <- sprintf("%0.2f", fits["correctclass2D"] / 100)
 tab$APRE[i] <- sprintf("%0.2f", fits["apre2D"])
-## Display the table
-tab
-
+## Display/save the table
+# tab
+write.csv(tab, file = "tables/TableF2.csv", row.names = FALSE)

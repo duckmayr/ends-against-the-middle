@@ -328,4 +328,5 @@ comparison <- data.frame(
     `GGUM Mean` = sprintf("%0.2f", c(t2theta[t2order], t3theta[t3order])),
     `GGUM SD`   = sprintf("%0.2f", c(t2theta_sd[t2order], t3theta_sd[t3order]))
 )
-comparison
+# comparison
+write.csv(comparison, file = "tables/TableK1.csv", row.names = FALSE)

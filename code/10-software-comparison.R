@@ -85,7 +85,7 @@ results <- parLapplyLB(cl = cl, X = 1:100, fun = function(x) {
 params <- c("theta", "alpha", "delta", "tau")
 files <- list.files(path = "output", pattern = "cell.*rds$", full.names = TRUE)
 results <- do.call("rbind", lapply(files, readRDS))
-results %>%
+results <- results %>%
     mutate(
         parameter = factor(parameter, levels = params),
         model = factor(model, levels = c("mml/eap", "mc3"))
@@ -93,3 +93,5 @@ results %>%
     group_by(model, parameter) %>%
     summarise(val = mean(as.numeric(rmse))) %>% 
     pivot_wider(names_from = model, values_from = val)
+# results
+write.csv(results, file = "tables/TableC2.csv", row.names = FALSE)

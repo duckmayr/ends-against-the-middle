@@ -135,11 +135,12 @@ N <- prod(dim(response_matrix))
 results$`L / N` <- round_(results$`Log Likelihood` / N)
 results$`Log Likelihood` <- round(results$`Log Likelihood`)
 results$`Mean Theta SD` <- round_(c(cjr_mean_sd, ggum_mean_sd))
-print(results)
-round(cor(
-    ggum_posterior_summary$estimates$theta,
-    cjr_estimates[grepl("theta", names(cjr_estimates))]
-), 3)
+# print(results)
+write.csv(results, file = "tables/Table1.csv", row.names = FALSE)
+# round(cor(
+#     ggum_posterior_summary$estimates$theta,
+#     cjr_estimates[grepl("theta", names(cjr_estimates))]
+# ), 3)
 
 
 ##### Reproduce Table D1 -----
@@ -189,4 +190,5 @@ results$AUC   <- round_(c(cjr_auc,   ggum_auc))
 results$Brier <- round_(c(cjr_brier, ggum_brier))
 results$`Log Likelihood` <- round(c(cjr_loglik, ggum_loglik))
 results$`L / N` <- round_(results$`Log Likelihood` / N)
-print(results)
+# print(results)
+write.csv(results, file = "tables/TableD1.csv", row.names = FALSE)

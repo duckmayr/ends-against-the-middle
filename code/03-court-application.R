@@ -259,10 +259,10 @@ naive_pred <- pmax(actual, 1)
 save(ggum_pred, ggum_pred_prob, mq_pred, mq_pred_prob,
      file = "data/court/10fold-predicted-probabilites.Rda")
 # Check the confusion matrices
-cat("GGUM confusion matrix:\n")
-caret::confusionMatrix(factor(c(ggum_pred)), factor(actual))
-cat("MQ confusion matrix:\n")
-caret::confusionMatrix(factor(c(mq_pred)), factor(actual))
+# cat("GGUM confusion matrix:\n")
+# caret::confusionMatrix(factor(c(ggum_pred)), factor(actual))
+# cat("MQ confusion matrix:\n")
+# caret::confusionMatrix(factor(c(mq_pred)), factor(actual))
 # Get proportion correctly classified
 ggum_correct <- mean(ggum_pred == response_matrix, na.rm = TRUE)
 mq_correct <- mean(mq_pred == response_matrix, na.rm = TRUE)
@@ -291,7 +291,7 @@ model_comparisons <- data.frame(model = c("GGUM", "MQ", "Naive"),
                                 brier = c(ggum_brier, mq_brier, NA),
                                 apre = c(ggum_apre, mq_apre, NA),
                                 auc = c(ggum_auc, mq_auc, NA))
-saveRDS(model_comparisons, file = "output/10fold-model_comparisons.rds")
+write.csv(model_comparisons, file = "tables/TableH1.csv", row.names = FALSE)
 
 
 ##### Reproduce Figure 7 -----

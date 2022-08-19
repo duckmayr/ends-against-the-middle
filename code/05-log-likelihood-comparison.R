@@ -114,4 +114,5 @@ results$`Mean Theta SD` <- sprintf("%0.2f", c(
     ggum_court_mean_sd, cjr_court_mean_sd, mq_court_mean_sd,
     ggum_house_mean_sd, cjr_house_mean_sd
 ))
-print(results)
+# print(results)
+write.csv(results, file = "tables/Table2.csv", row.names = FALSE)

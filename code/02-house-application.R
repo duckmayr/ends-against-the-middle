@@ -630,7 +630,7 @@ fitstats$APRE[idx] <- oc2d$fits[2]
 fitstats$Brier[idx] <- NA
 fitstats$AUC[idx] <- NA
 ## View results
-print(fitstats, digits = 2)
+# print(fitstats, digits = 2)
 #           Model Correct APRE Brier  AUC
 # 1          GGUM    0.96 0.89 0.029 0.96
 # 2        1D CJR    0.96 0.88 0.031 0.95
@@ -639,3 +639,5 @@ print(fitstats, digits = 2)
 # 5 2D W-NOMINATE    0.95 0.85    NA   NA
 # 6         1D OC    0.97 0.91    NA   NA
 # 7         2D OC    0.97 0.92    NA   NA
+## Save results
+write.csv(fitstats, file = "tables/TableE1.csv", row.names = FALSE)

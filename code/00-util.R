@@ -7,7 +7,7 @@
 #' 
 #' @return Invisibly returns a character vector of the directories the function
 #'     created because they were not present
-prepare_directories <- function(needed_dirs = c("output", "plots")) {
+prepare_directories <- function(needed_dirs = c("output", "plots", "tables")) {
     created_dirs <- character()
     for ( directory in needed_dirs ) {
         if ( dir.exists(directory) ) {
