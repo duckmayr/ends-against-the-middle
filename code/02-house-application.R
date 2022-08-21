@@ -616,13 +616,18 @@ fitstats$APRE[idx] <- nominate2d$fits["apre2D"]
 fitstats$Brier[idx] <- NA
 fitstats$AUC[idx] <- NA
 ## Get 1D OC fit statistics
-oc1d  <- oc(rc, dims = 1, lop = 0.01, polarity = aic[1])
+aic1  <- as.character(with(members115, icpsr[which.max(nominate_dim1)]))
+aic1  <- which(rownames(responses115) == aic1)
+oc1d  <- oc(rc, dims = 1, lop = 0.01, polarity = aic1)
 idx   <- which(fitstats$Model == "1D OC")
 fitstats$Correct[idx] <- oc1d$fits[1]
 fitstats$APRE[idx] <- oc1d$fits[2]
 fitstats$Brier[idx] <- NA
 fitstats$AUC[idx] <- NA
 ## Get 2D OC fit statistics
+aic2  <- as.character(with(members115, icpsr[which.max(nominate_dim2)]))
+aic2  <- which(rownames(responses115) == aic2)
+aic   <- c(aic1, aic2)
 oc2d  <- oc(rc, dims = 2, lop = 0.01, polarity = aic)
 idx   <- which(fitstats$Model == "2D OC")
 fitstats$Correct[idx] <- oc2d$fits[1]

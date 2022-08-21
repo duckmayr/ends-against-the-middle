@@ -77,8 +77,8 @@ tau   <- posterior_summary$estimates$tau
 set.seed(456)
 chain2 <- ggumMC3(responses, proposal_sds = sds, temps = temps)
 processed_chain2 <- post_process(chain2, n + m + 1, "+")
-convergence <- gelman.diag(list(processed_chain, processed_chain2))
-summary(convergence$psrf[ , 1])
+# convergence <- gelman.diag(list(processed_chain, processed_chain2))
+# summary(convergence$psrf[ , 1])
 
 
 ##### Compare with GRM -----
@@ -112,14 +112,18 @@ response_options <- c(
     "Strongly Disagree", "Disagree", "Neither", "Agree", "Strongly Agree"
 )
 option_colors <- colorRampPalette(colors = c("#808080", "black"))(5)
-grm_item9  <- plot(grm_fit, zrange = c(-2.25, 2.25), items = 9)
-grm_item2  <- plot(grm_fit, zrange = c(-2.25, 2.25), items = 2)
-grm_item4  <- plot(grm_fit, zrange = c(-2.25, 2.25), items = 4)
+z_range    <- c(-2.25, 2.25)
+grm_item9  <- plot(grm_fit, zrange = z_range, items = 9, plot = FALSE)
+grm_item2  <- plot(grm_fit, zrange = z_range, items = 2, plot = FALSE)
+grm_item4  <- plot(grm_fit, zrange = z_range, items = 4, plot = FALSE)
 theta_plot <- seq(-2.75, 2.5, 0.01)
 ggum_item9 <- irf_probs(alpha[9], delta[9], tau[[9]])
 ggum_item2 <- irf_probs(alpha[2], delta[2], tau[[2]])
 ggum_item4 <- irf_probs(alpha[4], delta[4], tau[[4]])
 ## Plot Item 2:
+n1 <- length(theta_plot)
+n2 <- length(grm_item2$z)
+opts <- c("Strongly disagree", "Disagree", "Neither", "Agree", "Strongly agree")
 dat <- data.frame(
     Model  = c(rep("GGUM", n1 * 5), rep("GRM", n2 * 5)),
     Option = factor(c(rep(opts, each = n1), rep(opts, each = n2)),
@@ -150,6 +154,9 @@ ggsave(
     dpi = 1000, compression = "lzw"
 )
 ## Plot Item 4:
+n1 <- length(theta_plot)
+n2 <- length(grm_item4$z)
+opts <- c("Strongly disagree", "Disagree", "Neither", "Agree", "Strongly agree")
 dat <- data.frame(
     Model  = c(rep("GGUM", n1 * 5), rep("GRM", n2 * 5)),
     Option = factor(c(rep(opts, each = n1), rep(opts, each = n2)),

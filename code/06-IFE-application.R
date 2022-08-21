@@ -175,7 +175,7 @@ for ( i in 1:nrow(t3responses) ) {
 samples <- lapply(samples, post_process, constraint = 4, expected_sign = "-")
 ## Diagnostics
 conv_stats <- gelman.diag(samples)
-summary(conv_stats$psrf[ , 1])
+# summary(conv_stats$psrf[ , 1])
 #   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 # 1.000   1.000   1.000   1.000   1.001   1.018 
 ## Analysis

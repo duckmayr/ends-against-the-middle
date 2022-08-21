@@ -257,7 +257,7 @@ mq_pred <- ifelse(mq_pred_prob > 0.5, 1, 0)
 actual <- c(response_matrix)
 naive_pred <- pmax(actual, 1)
 save(ggum_pred, ggum_pred_prob, mq_pred, mq_pred_prob,
-     file = "data/court/10fold-predicted-probabilites.Rda")
+     file = "data/10fold-predicted-probabilites.Rda")
 # Check the confusion matrices
 # cat("GGUM confusion matrix:\n")
 # caret::confusionMatrix(factor(c(ggum_pred)), factor(actual))
