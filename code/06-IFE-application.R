@@ -85,13 +85,13 @@ samples <- lapply(1:2, function(x) {
 ## Save results to disk
 saveRDS(object = samples, file = "output/ife-term2-samples.rds")
 ## Post-process
-for ( i in 1:nrow(responses) ) {
-    plot(density(samples[[1]][ , i]), main = paste(rownames(t2responses)[i], i))
-} ## 4 should be constraint; Cardenas should be negative per EMR 2008
+# for ( i in 1:nrow(responses) ) {
+#     plot(density(samples[[1]][ , i]), main = paste(rownames(t2responses)[i], i))
+# } ## 4 should be constraint; Cardenas should be negative per EMR 2008
 samples <- lapply(samples, post_process, constraint = 4, expected_sign = "-")
 ## Diagnostics
-conv_stats <- gelman.diag(samples)
-summary(conv_stats$psrf[ , 1])
+# conv_stats <- gelman.diag(samples)
+# summary(conv_stats$psrf[ , 1])
 #   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 # 1.000   1.000   1.000   1.000   1.001   1.009 
 ## Analysis
@@ -169,12 +169,12 @@ samples <- lapply(1:2, function(x) {
 ## Save results to disk
 saveRDS(object = samples, file = "output/ife-term3-samples.rds")
 ## Post-process
-for ( i in 1:nrow(t3responses) ) {
-    plot(density(samples[[1]][ , i]), main = paste(rownames(t3responses)[i], i))
-} ## 4 should be constraint; Cardenas should be negative per EMR 2008
+# for ( i in 1:nrow(t3responses) ) {
+#     plot(density(samples[[1]][ , i]), main = paste(rownames(t3responses)[i], i))
+# } ## 4 should be constraint; Cardenas should be negative per EMR 2008
 samples <- lapply(samples, post_process, constraint = 4, expected_sign = "-")
 ## Diagnostics
-conv_stats <- gelman.diag(samples)
+# conv_stats <- gelman.diag(samples)
 # summary(conv_stats$psrf[ , 1])
 #   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 # 1.000   1.000   1.000   1.000   1.001   1.018 

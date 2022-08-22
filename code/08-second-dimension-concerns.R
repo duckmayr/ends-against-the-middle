@@ -204,7 +204,7 @@ varlabs <- c(
     expression(theta[1]), "GGUM", "1D W-N D1", "2D W-N D1", "2D CJR D1",
     expression(theta[2]), "2D W-N D2", "2D CJR D2"
 )
-ggplot(data = cordat, mapping = aes(x = model1, y = model2, fill = cor)) +
+plt = ggplot(data = cordat, mapping = aes(x = model1, y = model2, fill = cor)) +
     geom_tile(color = "white", na.rm = TRUE) +
     scale_x_discrete(labels = varlabs) +
     scale_y_discrete(labels = varlabs) +
@@ -229,7 +229,10 @@ ggplot(data = cordat, mapping = aes(x = model1, y = model2, fill = cor)) +
                                  title = "Correlation",
                                  title.position = "top",
                                  title.hjust = 0.5))
-ggsave("plots/figF1.pdf", device = "pdf", height = 7, width = 7)
+ggsave(
+    plot = plt, filename = "plots/figF1.pdf",
+    device = "pdf", height = 7, width = 7
+)
 
 
 ##### Reproduce Figure F2 -----
