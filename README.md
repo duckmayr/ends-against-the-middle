@@ -23,9 +23,23 @@ approximately 7 days can be shaved off this time if you avoid running the
 software comparison for Appendix C.3 which occurs in the file
 `code/10-software-comparison.R`.
 
-## Instruction
+## Instructions for Reproducing Results
 
-To reproduce our results:
+There are two ways you can reproduce our results.
+First, we have included a [`bash`](https://www.gnu.org/software/bash/) script that you can run, which will run all R scripts required to reproduce our results without further input or work on your part.
+From the terminal, simply run
+
+```sh
+./reproduce-results.sh
+```
+
+This script has the following optional arguments:
+
+- `--help` or `-h`: Produce a message in the terminal explaining how to use the script
+- `--install` or `-i`: Install the R package versions we used; this will help ensure results reproduce exactly, but please note that you may need to update your R packages after reproducing our results to restore your R addon packages to the latest versions
+- `--no-comparison` or `-n`: This option means that the R script to reproduce Table C2 will **not** be run; if you are uninterested in the software comparison, this will save you about a week of computation time or so.
+
+Otherwise, you can do things piecemeal:
 
  1. Install the `GGUM` package included in the `code/` directory. This is a
     lightly patched version of the v0.4-2 previously available on CRAN that
