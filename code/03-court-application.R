@@ -69,7 +69,7 @@ time_map <- time_map - min(time_map) + 1
 
 ##### Run samplers for each fold -----
 # Set up our cluster
-number_of_cores <- detectCores() - 2 # or change as appropriate
+number_of_cores <- 2 # or change as appropriate
 cl <- makeCluster(number_of_cores, type = "FORK", outfile = "output/log.txt")
 # We'll use the following function for each fold:
 analyze_fold <- function(fold_number, save = FALSE) {
