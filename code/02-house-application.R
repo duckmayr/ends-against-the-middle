@@ -393,7 +393,7 @@ chain115 <- ggumMC3(
     alpha_prior_params = alpha_prior
 )
 aic <- as.character(members115$icpsr[which.min(members115$nominate_dim1)])
-aic <- which(rownames(responses) == aic)
+aic <- which(rownames(responses115) == aic)
 processed_ggum_chains <- lapply(ggum_chains, post_process, constraint = aic,
                                 expected_sign = "-")
 ggum_post <- summary(processed_ggum_chains)

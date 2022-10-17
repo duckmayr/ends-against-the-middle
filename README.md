@@ -36,7 +36,7 @@ From the terminal, simply run
 This script has the following optional arguments:
 
 - `--help` or `-h`: Produce a message in the terminal explaining how to use the script
-- `--install` or `-i`: Install the R package versions we used; this will help ensure results reproduce exactly, but please note that you may need to update your R packages after reproducing our results to restore your R addon packages to the latest versions
+- `--install` or `-i`: Install the R package versions we used; this will help ensure results reproduce exactly, but please note that you may need to update your R packages after reproducing our results to restore your R addon packages to the latest versions. Please also note that this requires tools to compile R packages from source. If you are using a Mac, this may fail for the `oc` package depending on what version of `gfortran` you have installed. If so, we have included Mac x86 binaries for the appropriate version of the `oc` package.
 - `--no-comparison` or `-n`: This option means that the R script to reproduce Table C2 will **not** be run; if you are uninterested in the software comparison, this will save you about a week of computation time or so.
 
 Otherwise, you can do things piecemeal:
@@ -49,6 +49,8 @@ Otherwise, you can do things piecemeal:
     Install version 1.2 of the `oc` package; at the time of this writing it
     can't be installed using `install.packages()`, but you should be able to do
     so via the R command `devtools::install_version("oc", version = "1.2", repos = "http://cloud.r-project.org")`.
+    Again, if you're using a Mac, you may need to instead install from the
+    binary we have included (`oc_1.2.tgz` in this repository's root directory).
     All other required R extension packages should be available on CRAN;
     if you would like to use the same versions we used, they are as follows:
     - `bggum`: version 1.0.2
