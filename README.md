@@ -84,4 +84,21 @@ Otherwise, you can do things piecemeal:
     and D1.
 11. Run the R script `code/10-software-comparison.R`. This reproduces Table C2.
 12. Run the R script `code/11-non-monotonicity.R`. This reproduces Figure J1.
-
+13. Run the R script `code/12-software-comparison2.R`.
+    This reproduces Figures C1 and C2.
+    This R script relies on intermediate output from a closed-source,
+    Windows only program: `data/sim01-item-draws.txt`,
+    `data/sim02-item-draws.txt`, and `data/sim03-item-draws.txt`.
+    If you have access to a Windows machine and wish to recreate this
+    intermediate output:
+    a. Run the installer (`MCMCGGUM-1.2.0-Installer.exe`),
+    b. Copy the files `data/sim-study-data.txt`, `data/sim01.mcs`,
+       `data/sim02.mcs`, and `data/sim03.mcs` to the directory the program was
+       installed to (by default `C:/Program Files (x86)/UCF IST/MCMC GGUM/`)
+    c. Open the program
+    d. Click "Import Syntax..." on the right-hand side and select `sim01.mcs`
+    e. Click "Run" on the right-hand side
+    f. When the run is complete, save the output via "File" > "Save As"
+    g. Repeat steps c-f for `sim02.mcs` and `sim03.mcs`
+    h. Then you can verify equality with the files `data/sim01-item-draws.txt`,
+    `data/sim02-item-draws.txt`, and `data/sim03-item-draws.txt`.

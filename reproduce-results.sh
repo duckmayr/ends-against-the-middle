@@ -65,6 +65,8 @@ then
 else
     echo "Reproducing Table C2"
     Rscript --no-echo "code/10-software-comparison.R"
+    echo "Reproducing Figures C1 and C2"
+    Rscript --no-echo "code/12-software-comparison2.R"
 fi
 
 
