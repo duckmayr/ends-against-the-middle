@@ -91,14 +91,14 @@ Otherwise, you can do things piecemeal:
     `data/sim02-item-draws.txt`, and `data/sim03-item-draws.txt`.
     If you have access to a Windows machine and wish to recreate this
     intermediate output:
-    a. Run the installer (`MCMCGGUM-1.2.0-Installer.exe`),
-    b. Copy the files `data/sim-study-data.txt`, `data/sim01.mcs`,
+    1. Run the installer (`MCMCGGUM-1.2.0-Installer.exe`),
+    2. Copy the files `data/sim-study-data.txt`, `data/sim01.mcs`,
        `data/sim02.mcs`, and `data/sim03.mcs` to the directory the program was
        installed to (by default `C:/Program Files (x86)/UCF IST/MCMC GGUM/`)
-    c. Open the program
-    d. Click "Import Syntax..." on the right-hand side and select `sim01.mcs`
-    e. Click "Run" on the right-hand side
-    f. When the run is complete, save the output via "File" > "Save As"
-    g. Repeat steps c-f for `sim02.mcs` and `sim03.mcs`
-    h. Then you can verify equality with the files `data/sim01-item-draws.txt`,
-    `data/sim02-item-draws.txt`, and `data/sim03-item-draws.txt`.
+    3. Open the program
+    4. Click "Import Syntax..." on the right-hand side and select `sim01.mcs`
+    5. Click "Run" on the right-hand side
+    6. When the run is complete, save the output via "File" > "Save As"
+    7. Repeat steps iii-vi for `sim02.mcs` and `sim03.mcs`
+    8. Then you can verify equality with the files `data/sim01-item-draws.txt`,
+       `data/sim02-item-draws.txt`, and `data/sim03-item-draws.txt`.
