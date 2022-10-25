@@ -392,11 +392,10 @@ chain115 <- ggumMC3(
     n_temps = 6,
     alpha_prior_params = alpha_prior
 )
-aic <- as.character(members115$icpsr[which.min(members115$nominate_dim1)])
-aic <- which(rownames(responses115) == aic)
-processed_ggum_chains <- lapply(ggum_chains, post_process, constraint = aic,
-                                expected_sign = "-")
-ggum_post <- summary(processed_ggum_chains)
+aic115 <- as.character(members115$icpsr[which.min(members115$nominate_dim1)])
+aic115 <- which(rownames(responses115) == aic115)
+chain115 <- post_process(chain115, constraint = aic115, expected_sign = "-")
+ggum_post <- summary(chain115)
 saveRDS(ggum_post, file = "output/H115-ggum-post-summary.rds")
 
 
