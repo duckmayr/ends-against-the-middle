@@ -547,7 +547,7 @@ rug(nom1d_dim1[responses[ , item] == 0], side = 1)
 par(opar)
 invisible(dev.off())
 ## (panel (a) is the same as figI3)
-file.copy(from = "plots/figI3.pdf", to = "plots/figE5a.tif", overwrite = TRUE)
+file.copy(from = "plots/figI3.pdf", to = "plots/figE5a.pdf", overwrite = TRUE)
 
 
 ##### Reproduce Table E.1 -----
