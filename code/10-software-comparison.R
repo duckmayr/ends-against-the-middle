@@ -94,4 +94,5 @@ results <- results %>%
     summarise(val = mean(as.numeric(rmse))) %>% 
     pivot_wider(names_from = model, values_from = val)
 # results
+results <- format(results, digits = 2)
 write.csv(results, file = "tables/TableC2.csv", row.names = FALSE)

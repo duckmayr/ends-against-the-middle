@@ -647,4 +647,5 @@ fitstats$AUC[idx] <- NA
 # 6         1D OC    0.97 0.91    NA   NA
 # 7         2D OC    0.97 0.92    NA   NA
 ## Save results
+fitstats <- format(fitstats, digits = 2)
 write.csv(fitstats, file = "tables/TableE1.csv", row.names = FALSE)

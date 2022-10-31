@@ -291,6 +291,7 @@ model_comparisons <- data.frame(model = c("GGUM", "MQ", "Naive"),
                                 brier = c(ggum_brier, mq_brier, NA),
                                 apre = c(ggum_apre, mq_apre, NA),
                                 auc = c(ggum_auc, mq_auc, NA))
+model_comparisons <- format(model_comparisons, digits = 2)
 write.csv(model_comparisons, file = "tables/TableH1.csv", row.names = FALSE)
 
 
